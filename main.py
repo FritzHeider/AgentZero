@@ -2,7 +2,7 @@ import speech_recognition as sr
 import pyttsx3
 from openai import OpenAI
 
-client = OpenAI(api_key='sk-agent-x-fsZmmi5uVEG6lyqnRCj7T3BlbkFJdBYZovJ7z6pwmAGC2xQc')
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
 import subprocess
