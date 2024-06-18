@@ -1,12 +1,14 @@
 import speech_recognition as sr
 import pyttsx3
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key='sk-agent-x-fsZmmi5uVEG6lyqnRCj7T3BlbkFJdBYZovJ7z6pwmAGC2xQc')
 import tkinter as tk
-from tkinter import simpledialog, messagebox, scrolledtext
+from tkinter import messagebox, scrolledtext
 import subprocess
+import threading
 
 # Configure your OpenAI API key
-openai.api_key = 'your-api-key-here'
 
 class VoiceCommander(tk.Tk):
     def __init__(self):
@@ -22,8 +24,8 @@ class VoiceCommander(tk.Tk):
         self.output_text = scrolledtext.ScrolledText(self, height=10)
         self.output_text.pack(pady=20)
 
-        # Start listening to commands
-        self.listen_and_process()
+        # Start listening to commands in a separate thread
+        threading.Thread(target=self.listen_and_process, daemon=True).start()
 
     def listen_and_process(self):
         """ Listen to voice commands, process them, and handle command execution. """
@@ -48,17 +50,19 @@ class VoiceCommander(tk.Tk):
         except sr.UnknownValueError:
             self.speak("Sorry, I did not get that.")
             return None
+        except sr.RequestError as e:
+            self.speak("Could not request results; {0}".format(e))
+            return None
 
     def chat_with_gpt(self, text):
         """ Send text to ChatGPT and get a response. """
         try:
-            response = openai.Completion.create(
-                engine="text-davinci-002",
-                prompt=text,
-                max_tokens=150
-            )
+            response = client.completions.create(engine="text-davinci-003",
+            prompt=text,
+            max_tokens=150)
             return response.choices[0].text.strip()
         except Exception as e:
+            self.output_text.insert(tk.END, f"Error with ChatGPT: {e}\n")
             return "I had a problem processing that command."
 
     def speak(self, text):
@@ -71,8 +75,8 @@ class VoiceCommander(tk.Tk):
         confirm = messagebox.askyesno("Confirm", "Execute this command?")
         if confirm:
             try:
-                subprocess.run(command, shell=True, check=True)
-                self.output_text.insert(tk.END, "Command executed successfully.\n")
+                result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
+                self.output_text.insert(tk.END, f"Command executed successfully:\n{result.stdout}\n")
             except subprocess.CalledProcessError as e:
                 self.output_text.insert(tk.END, f"Error executing command: {e}\n")
         else:
