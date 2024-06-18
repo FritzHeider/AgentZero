@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 from openai import OpenAI
+import os
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 import tkinter as tk
