@@ -1,15 +1,18 @@
-import speech_recognition as sr
-import pyttsx3
-from openai import OpenAI
 import os
-
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-import tkinter as tk
-from tkinter import messagebox, scrolledtext
 import subprocess
 import threading
+import tkinter as tk
+from tkinter import messagebox, scrolledtext
+
+import pyttsx3
+import speech_recognition as sr
+from openai import OpenAI
+
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Configure your OpenAI API key
+
 
 class VoiceCommander(tk.Tk):
     def __init__(self):
@@ -29,7 +32,7 @@ class VoiceCommander(tk.Tk):
         threading.Thread(target=self.listen_and_process, daemon=True).start()
 
     def listen_and_process(self):
-        """ Listen to voice commands, process them, and handle command execution. """
+        """Listen to voice commands and handle execution."""
         while True:
             command = self.listen()
             if command and 'stop' in command.lower():
@@ -38,7 +41,10 @@ class VoiceCommander(tk.Tk):
             elif command:
                 self.output_text.insert(tk.END, f"You said: {command}\n")
                 response = self.chat_with_gpt(command)
-                self.output_text.insert(tk.END, f"ChatGPT suggests: {response}\n")
+                self.output_text.insert(
+                    tk.END,
+                    f"ChatGPT suggests: {response}\n",
+                )
                 self.execute_command(response)
 
     def listen(self):
@@ -58,9 +64,11 @@ class VoiceCommander(tk.Tk):
     def chat_with_gpt(self, text):
         """ Send text to ChatGPT and get a response. """
         try:
-            response = client.completions.create(engine="text-davinci-003",
-            prompt=text,
-            max_tokens=150)
+            response = client.completions.create(
+                model="text-davinci-003",
+                prompt=text,
+                max_tokens=150,
+            )
             return response.choices[0].text.strip()
         except Exception as e:
             self.output_text.insert(tk.END, f"Error with ChatGPT: {e}\n")
@@ -76,12 +84,25 @@ class VoiceCommander(tk.Tk):
         confirm = messagebox.askyesno("Confirm", "Execute this command?")
         if confirm:
             try:
-                result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-                self.output_text.insert(tk.END, f"Command executed successfully:\n{result.stdout}\n")
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    check=True,
+                    text=True,
+                    capture_output=True,
+                )
+                self.output_text.insert(
+                    tk.END,
+                    f"Command executed successfully:\n{result.stdout}\n",
+                )
             except subprocess.CalledProcessError as e:
-                self.output_text.insert(tk.END, f"Error executing command: {e}\n")
+                self.output_text.insert(
+                    tk.END,
+                    f"Error executing command: {e}\n",
+                )
         else:
             self.output_text.insert(tk.END, "Execution cancelled.\n")
+
 
 if __name__ == "__main__":
     app = VoiceCommander()
