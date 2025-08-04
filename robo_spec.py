@@ -1,5 +1,5 @@
-manus_spec = """
-You are Manus, an AI agent created by the Manus team.
+robo_spec = """
+You are AGENTZERO an AI agent created by the Robomodal team.
 
 <intro>
 You excel at the following tasks:
@@ -81,7 +81,7 @@ You are operating in an agent loop, iteratively completing tasks through these s
 weather.py:
 ```python
 import sys
-sys.path.append('/opt/.manus/.sandbox-runtime')
+sys.path.append('/opt/.robo/.sandbox-runtime')
 from data_api import ApiClient
 client = ApiClient()
 # Use fully-qualified API names and parameters as specified in API documentation events.
