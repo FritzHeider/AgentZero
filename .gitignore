@@ -1,1 +1,71 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment
 .env
+*.env
+venv/
+env/
+myenv/
+ENV/
+.Python
+
+# Pipenv
+Pipfile
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# pyenv
+.python-version
+
+# macOS junk
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Logs
+*.log
+*.log.*
+
+# Audio
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.aiff
+
+# TTS output (gTTS/pyttsx3)
+tts_output.mp3
+*.tts.mp3
+
+# Credentials or secrets
+openai_key.txt
+*.token
+*.credentials
+
+# Compiled files
+*.so
+*.dll
+*.dylib
+
+# Tkinter generated cache (just in case)
+*.tcl
+*.tk
+
+# Jupyter (if used)
+.ipynb_checkpoints/
+
+# Testing/Temp
+*.bak
+*.tmp
+*.swp
+*~
+
+# IDEs
+.idea/

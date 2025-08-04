@@ -1,0 +1,6 @@
+openai
+pyttsx3
+speechrecognition
+pyaudio
+tk
+gtts
